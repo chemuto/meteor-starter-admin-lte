@@ -1,0 +1,36 @@
+<template name="profile">
+	<div class="row">
+	  {{#autoForm id="updateProfile" collection=Users doc=currentUser type="update"}}
+	  <div class="col-md-12">{{> alert}}</div>
+		<div class="col-md-3">
+			<div class="box box-primary">
+			  <div class="box-header with-border">
+			    <h3 class="box-title">Picture</h3>
+			  </div><!-- /.box-header -->
+			  <div class="box-body">
+			    {{> afQuickField name="profile.picture"}}
+			  </div><!-- /.box-body -->
+			</div><!-- /.box -->
+
+		</div>
+		<div class="col-md-9">
+			<div class="box box-primary">
+			  <div class="box-header with-border">
+			    <h3 class="box-title">Profile</h3>
+			  </div><!-- /.box-header -->
+			  <div class="box-body">
+			    {{> afQuickField name='profile.firstName' }}
+			    {{> afQuickField name='profile.lastName' }}
+			    {{> afQuickField name='profile.bio' }}
+			    {{> afQuickField name='profile.location' }}
+			    {{> afQuickField name='profile.country' }}
+			    <button type="submit" class="btn btn-primary">Update</button>
+			  </div><!-- /.box-body -->
+			</div><!-- /.box -->
+		</div>
+		{{/autoForm}}
+	</div>
+
+
+
+</template>

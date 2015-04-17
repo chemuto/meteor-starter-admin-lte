@@ -1,0 +1,109 @@
+<template name="dashboard">
+		<div class="row">
+			<div class="col-md-3">
+				{{> add}}
+				<!-- {{> addWithModal}} -->
+				{{> favorites}}
+			</div>
+			<div class="col-md-9">
+				{{> alert}}
+				{{> posts}}
+			</div>
+		</div>
+</template>
+
+
+<template name="add">
+	<div class="box box-primary">
+	  <div class="box-header with-border">
+	    <h3 class="box-title">Add a Post</h3>
+	  </div><!-- /.box-header -->
+	  <div class="box-body">
+	    {{#autoForm id="add" collection="Posts" type="insert"}}
+			{{> afQuickField name="title"}}
+			{{> afQuickField name="content"}}
+			<!-- {{> afQuickField name="picture"}} -->
+			{{> afQuickField name="picture"}}
+			<!-- {{> afFileUpload name="picture" collection="Attachments"}} -->
+			<button type="submit" class="btn btn-primary">Add Post</button>
+			{{/autoForm}}
+	  </div><!-- /.box-body -->
+	</div><!-- /.box -->
+</template>
+
+<template name="addWithModal">
+	<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Add with a modal</h3>
+			</div>
+			<div class="panel-body">
+				<a href="#afModal" data-toggle="modal" class="btn btn-primary" collection="Posts" operation="insert" fields="title,content,picture">Add a new post</a>
+			</div>
+	</div>
+</template>
+
+<template name="posts">
+	{{#each orderByFavorites Posts}}
+		<div class="box box-primary">
+		  <div class="box-header with-border">
+		    <h3 class="box-title">{{title}}</h3>
+		    <div class="box-tools pull-right">
+		      <!-- Buttons, labels, and many other things can be placed here! -->
+		      <!-- Here is a label for example -->
+		      <i class="fa fa-thumbs-up"></i> {{favoriteCount _id}}
+		      <i class="fa fa-comments"></i> {{commentCount _id}}
+		    </div><!-- /.box-tools -->
+		  </div><!-- /.box-header -->
+		  <div class="box-body">
+		    <p class="text-center">
+					{{#with getDoc picture 'Attachments'}}
+						<img src="{{url}}" class="img-thumbnail img-rounded">
+					{{/with}}
+				</p>
+				<div class="media">
+					<a class="pull-left" href="#">
+						{{> profileThumb _id=owner}}
+					</a>
+					<div class="media-body">
+						<p>{{content}}</p>
+						{{#if $eq owner User._id}}
+						<small>
+							{{#afModal title="Update post" omitFields="createdAt,updatedAt,owner" class="text-primary" collection="Posts" operation="update" doc=_id}}
+								<i class="fa fa-pencil" buttonContent="Edit post"></i> Edit post
+							{{/afModal}}
+							{{#afModal title="Delete post" class="text-danger" collection="Posts" operation="remove" doc=_id}}
+								<i class="fa fa-times" buttonContent="Edit post"></i> Delete
+							{{/afModal}}
+						</small>
+						{{/if}}
+					</div>
+				</div>
+		  </div><!-- /.box-body -->
+		  <div class="box-footer">
+		    {{> favoriteButton _id=_id}}
+				{{> commentFormToggle }}
+				{{> comments}}
+		  </div><!-- box-footer -->
+		</div><!-- /.box -->
+
+	{{/each}}
+</template>
+
+<template name="favorites">
+	{{#if Favorites 'Posts'}}
+	<div class="box box-primary">
+	  <div class="box-header with-border">
+	    <h3 class="box-title">Favorites</h3>
+	  </div><!-- /.box-header -->
+	  <div class="box-body">
+	    <ul>
+			{{#each Favorites 'Posts'}}
+				<li>
+					<a>{{title}}</a>
+				</li>
+			{{/each}}
+			</ul>
+	  </div><!-- /.box-body -->
+	</div><!-- /.box -->
+	{{/if}}
+</template>
